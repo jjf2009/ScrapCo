@@ -97,13 +97,14 @@ const Navbar = () => {
                         </Link>
                     )}
 
-                    <Link to="/cart" className="bg-primary p-1 sm:px-6 px-2 flex items-center rounded-sm">
-                        {isPage !== "cart" && <HiOutlineShoppingCart />}
-                        {isPage !== "cart" && (
-                            <span className="text-sm font-semibold sm:ml-1">
+                    <Link to="/cart" style= {{display:'flex'
+                    }}>
+                        <HiOutlineShoppingCart className="cart"/>
+                        
+                            <span >
                                 {cartItems.length > 0 ? cartItems.length : 0}
                             </span>
-                        )}
+                        
                     </Link>
                 </div>
             </nav>

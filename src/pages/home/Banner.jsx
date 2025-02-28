@@ -108,10 +108,13 @@ const Banner = () => {
           }}
           auto-rotate="true"
           rotation-per-second="20deg"
-          interaction="auto"
+          interaction="hover"  /* Keeps hover movement but removes excess interaction */
           camera-orbit="0deg 90deg 2m"
+          disable-zoom  /* Disables zooming */
+          disable-pan   /* Stops dragging */
         />
       </div>
+
     </div>
   );
 };
