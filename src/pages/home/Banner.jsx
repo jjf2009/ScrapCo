@@ -38,68 +38,54 @@ const Banner = () => {
       }}
     >
       {/* Left Section */}
-<div
-  style={{
-    flex: 1,
-    flexDirection: "column",
-    display: "flex",
-    justifyContent: "flex-start",
-    paddingTop: "10vh",
-    alignItems: "center",
-  }}
->
-  {/* Moveable Wrapper for Title + Description */}
-  <div style={{ marginLeft: "80px" }}> {/* Adjust value as needed */}
-    <h1 style={{ fontSize: "2rem", color: "#333" }}>Buy! Sell! Scrap!</h1>
-  </div>
-  <div style={{ marginLeft: "80px" }}> {/* Adjust value as needed */}
-  <p>Welcome to SCRAPCO – Your trusted partner for all scrap solutions.
-  At SCRAPCO, we make buying and selling scrap materials effortless and reliable. Whether you're looking to dispose of waste responsibly or find quality scrap materials, our platform connects buyers and sellers seamlessly. Join us in promoting sustainable recycling while turning scrap into valuable resources!</p>
-  <button className="btn-primary">Get Started</button>
-  </div>
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-start",
+          paddingTop: "10vh",
+          alignItems: "center",
+          maxWidth: "50%", // Limit width to prevent pushing the right section
+          paddingLeft: "5vw", // Adds spacing from the left edge
+        }}
+      >
+        {/* Title + Description */}
+        <h1 style={{ fontSize: "2rem", color: "#333", textAlign: "center" }}>Buy! Sell! Scrap!</h1>
+        <p style={{ textAlign: "center", maxWidth: "80%" }}>
+          Welcome to SCRAPCO – Your trusted partner for all scrap solutions.
+          At SCRAPCO, we make buying and selling scrap materials effortless and reliable. Whether you're looking to dispose of waste responsibly or find quality scrap materials, our platform connects buyers and sellers seamlessly. Join us in promoting sustainable recycling while turning scrap into valuable resources!
+        </p>
+        <button className="btn-primary">Get Started</button>
 
+        {/* Images Section */}
+        <div style={{ position: "absolute", top: "400px", left: "50px" }} className="scrap-container">
+  <img
+    src={rubber}
+    alt="Rubber Scrap"
+    style={{ width: "200px", height: "200px", objectFit: "cover" }}
+  />
+  <span className="tooltip">Rubber Scrap</span>
+</div>
 
-  
+<div style={{ position: "absolute", top: "400px", left: "300px" }} className="scrap-container">
+  <img
+    src={plastic}
+    alt="Plastic Scrap"
+    style={{ width: "200px", height: "200px", objectFit: "cover" }}
+  />
+  <span className="tooltip">Plastic Scrap</span>
+</div>
 
-        {/* Images Section with Fixed Custom Positions */}
-        <div style={{ position: "relative", width: "100%", height: "200px" }}>
-          <img
-            src={rubber}
-            alt="Rubber Scrap"
-            style={{
-              width: "200px",
-              height: "200px",
-              objectFit: "cover",
-              position: "absolute",
-              top: "120px", // Adjust as needed
-              left: "50px", // Adjust as needed
-            }}
-          />
-          <img
-            src={plastic}
-            alt="Plastic Scrap"
-            style={{
-              width: "200px",
-              height: "200px",
-              objectFit: "cover",
-              position: "absolute",
-              top: "120px", // Adjust as needed
-              left: "300px", // Adjust as needed
-            }}
-          />
-          <img
-            src={metal}
-            alt="Metal Scrap"
-            style={{
-              width: "200px",
-              height: "200px",
-              objectFit: "cover",
-              position: "absolute",
-              top: "120px", // Adjust as needed
-              left: "550px", // Adjust as needed
-            }}
-          />
-        </div>
+<div style={{ position: "absolute", top: "400px", left: "550px" }} className="scrap-container">
+  <img
+    src={metal}
+    alt="Metal Scrap"
+    style={{ width: "200px", height: "200px", objectFit: "cover" }}
+  />
+  <span className="tooltip">Metal Scrap</span>
+</div>
+
       </div>
 
       {/* Right Section (Spline Model) */}
@@ -118,7 +104,7 @@ const Banner = () => {
             width: "90%",
             height: "90%",
             background: "transparent",
-            transform: "translateX(110px)",
+            transform: "translateX(90px)",
           }}
           auto-rotate="true"
           rotation-per-second="20deg"
