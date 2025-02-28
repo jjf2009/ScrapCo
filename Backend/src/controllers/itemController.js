@@ -84,7 +84,7 @@ export const createItem = async (req, res) => {
 // Get all items
 export const getAllItems = async (req, res) => {
   try {
-    const rawItems = await prisma.$queryRaw`SELECT * FROM "Item"`; // Fetch raw data
+    const rawItems = await prisma.$queryRaw`SELECT * FROM "Item"`;
     res.json(rawItems);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch items", error: error.message });
