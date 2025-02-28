@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import sellerRoutes from "./routes/sellerRoutes.js";
 import itemRoutes from "./routes/itemRoutes.js";
-
+import orderRoutes from "./routes/orderRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -25,7 +25,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/", sellerRoutes);
-app.use("/items", itemRoutes);
+app.use("/", itemRoutes);
+app.use("/", orderRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

@@ -13,10 +13,6 @@ const ProductCard = ({ product }) => {
       <div className="flex flex-col gap-3">
         <div className="flex justify-between items-center">
           <h3 className="text-xl font-semibold text-green-600">{product?.points} Points</h3>
-          {/* <div className="flex items-center space-x-2 text-gray-600">
-            <FaUserAlt size={14} />
-            <span className="text-sm font-medium">{product?.sellerName}</span>
-          </div> */}
         </div>
 
         <div className="space-y-2 mt-1">
