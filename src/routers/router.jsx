@@ -6,7 +6,7 @@ import CartPage from "../pages/scrapitem/CartPage.jsx";
 import CheckoutPage from "../pages/scrapitem/CheckoutPage.jsx";
 import SingleScrapMaterial from "../pages/scrapitem/SingleScrapMaterial.jsx";
 import OrderPage from "../pages/scrapitem/OrderPage.jsx";
-// import DashboardPage from "../pages/dashboard/DashboardPage.jsx";
+import Shop from "../pages/shop/Shop.jsx";
 
 const router = createBrowserRouter([
   {
@@ -37,10 +37,10 @@ const router = createBrowserRouter([
         path: "/scrap/:id",
         element: <SingleScrapMaterial />,
       },
-      // {
-      //   path: "/dashboard",
-      //   element: <DashboardPage />,
-      // },
+      {
+        path: "/shop",
+        element: <Shop/>,
+      },
     ],
   },
 ]);

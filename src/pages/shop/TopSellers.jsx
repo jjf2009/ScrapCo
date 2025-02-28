@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ProductCard from '../product/ProductCard'; // Updated import
+import ProductCard from './Card'; // Updated import
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -11,7 +11,7 @@ import { Pagination, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { useFetchAllProductsQuery } from '../../redux/features/products/productApi'; // Updated API hook
+import { useFetchAllProductsQuery } from '../../redux/features/shop/shopApi'; // Updated API hook
 
 const categories = [
     "All Categories", 

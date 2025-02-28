@@ -3,7 +3,7 @@ import Banner from './Banner'
 import TopSellers from './TopSellers'
 import Recommened from './Recommened'
 
-const Home = () => {
+const Shop = () => {
   return (
     <>
         <Banner/>
@@ -13,4 +13,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default Shop

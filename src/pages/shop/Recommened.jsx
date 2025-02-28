@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import Card from './Card';
-import { useFetchAllItemsQuery } from '../../redux/features/items/itemsApi';
+import { useFetchAllProductsQuery } from '../../redux/features/shop/shopApi';
 import { FaLeaf, FaSearch } from 'react-icons/fa';
 
 const Recommended = () => {
-  const { data: products = [], isLoading } = useFetchAllItemsQuery();
+  const { data: products = [], isLoading } =useFetchAllProductsQuery();
   const [currentPage, setCurrentPage] = useState(1);
   const [categoryFilter, setCategoryFilter] = useState('all');
   

@@ -1,5 +1,5 @@
 import React from 'react';
-import bannerImg from "../../assets/scrap-banner.png"; // Update with a relevant image
+import bannerImg from "../../assets/shop-banner.jpg"; // Update with a relevant image
 
 const Banner = () => {
   return (
