@@ -3,21 +3,25 @@ import prisma from "../prismaClient.js";
 // Create a new item
 export const createItem = async (req, res) => {
   try {
-    const { user_id, pictures, description, quantity, material, pickUpAddress, pickUpTime } = req.body;
+    const { user_id, pictures, description, quantity, material, pickUpAddress, pickUpTime, seller_name, seller_phone, listPlat, price } = req.body;
 
-    if (!user_id || !pictures.length || !description || !quantity || !material || !pickUpAddress || !pickUpTime) {
+    if (!pictures.length || !description || !quantity || !material || !pickUpAddress || !pickUpTime) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     const item = await prisma.item.create({
       data: {
         user_id,
+        seller_name,
+        seller_phone,
         pictures,
         description,
         quantity,
         material,
         pickUpAddress,
-        pickUpTime: new Date(pickUpTime),
+        pickUpTime,
+        listPlat,
+        price
       }
     });
 
