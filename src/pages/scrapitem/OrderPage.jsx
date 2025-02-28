@@ -1,10 +1,21 @@
 import React from 'react';
 import { useGetOrderByEmailQuery } from '../../redux/features/orders/ordersApi';
-import { useAuth } from '../../context/AuthContext';
+import { useGetCurrentDealerQuery } from '../../redux/features/dealer/dealerApi';
 
 const OrderPage = () => {
-    const { currentUser } = useAuth();
-    const { data: orders = [], isLoading, isError } = useGetOrderByEmailQuery(currentUser.email);
+    // Fetch the current dealer (user)
+    const { data: currentDealer, isLoading: isDealerLoading } = useGetCurrentDealerQuery();
+    
+    // Check if the user is logged in
+    if (isDealerLoading) {
+        return <div className="text-center text-lg font-semibold">Checking login status...</div>;
+    }
+    if (!currentDealer) {
+        return <div className="text-red-500 text-center">You must be logged in to view your orders.</div>;
+    }
+
+    // Fetch orders using the logged-in dealer's email
+    const { data: orders = [], isLoading, isError } = useGetOrderByEmailQuery(currentDealer.email);
 
     if (isLoading) return <div className="text-center text-lg font-semibold">Loading your orders...</div>;
     if (isError) return <div className="text-red-500 text-center">Error retrieving order data. Please try again later.</div>;

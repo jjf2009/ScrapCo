@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ScrapCard from '../scrap/ScrapCard'; // Updated import
+import ProductCard from '../product/ProductCard'; // Updated import
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -11,30 +11,30 @@ import { Pagination, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { useFetchAllScrapQuery } from '../../redux/features/scrap/scrapApi'; // Updated API hook
+import { useFetchAllProductsQuery } from '../../redux/features/products/productApi'; // Updated API hook
 
 const categories = [
     "All Categories", 
-    "Metal", 
-    "Plastic", 
-    "Electronics", 
-    "Paper", 
-    "Glass"
+    "Sustainable Living", 
+    "Recycled Goods", 
+    "Organic Products", 
+    "Handmade Crafts", 
+    "Eco-friendly Packaging"
 ];
 
-const TopSellers = () => {
+const TopProducts = () => {
     const [selectedCategory, setSelectedCategory] = useState("All Categories");
-    const { data: scrapItems = [] } = useFetchAllScrapQuery();
+    const { data: products = [] } = useFetchAllProductsQuery();
 
     // Filter items based on category selection
-    const filteredScrap = selectedCategory === "All Categories" 
-        ? scrapItems 
-        : scrapItems.filter(item => item.category === selectedCategory.toLowerCase());
+    const filteredProducts = selectedCategory === "All Categories" 
+        ? products 
+        : products.filter(item => item.category === selectedCategory.toLowerCase());
 
     return (
         <div className="py-10">
             <h2 className="text-3xl font-semibold text-green-700 mb-6">
-                Top-Selling Scrap Materials
+                Top Eco-Friendly Products
             </h2>
 
             {/* Category Filtering */}
@@ -64,10 +64,10 @@ const TopSellers = () => {
                 modules={[Pagination, Navigation]}
                 className="mySwiper"
             >
-                {filteredScrap.length > 0 &&
-                    filteredScrap.map((scrap, index) => (
+                {filteredProducts.length > 0 &&
+                    filteredProducts.map((product, index) => (
                         <SwiperSlide key={index}>
-                            <ScrapCard scrap={scrap} /> {/* Updated component */}
+                            <ProductCard product={product} /> {/* Updated component */}
                         </SwiperSlide>
                     ))}
             </Swiper>
@@ -75,4 +75,4 @@ const TopSellers = () => {
     );
 };
 
-export default TopSellers;
+export default TopProducts;

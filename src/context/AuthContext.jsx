@@ -1,73 +1,91 @@
-import {  createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "../firebase/firebase.config";
-import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import { 
+    createUserWithEmailAndPassword, 
+    GoogleAuthProvider, 
+    onAuthStateChanged, 
+    signInWithEmailAndPassword, 
+    signInWithPopup, 
+    signOut, 
+    updateProfile 
+} from "firebase/auth";
 
-const AuthContext =  createContext();
-
-export const useAuth = () => {
-    return useContext(AuthContext)
-}
-
+const AuthContext = createContext();
+export const useAuth = () => useContext(AuthContext);
 const googleProvider = new GoogleAuthProvider();
 
-// authProvider
-export const AuthProvide = ({children}) => {
+export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // register a user
-    const registerUser = async (email,password) => {
+    // Register User
+    const registerUser = async (email, password, name) => {
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await updateProfile(userCredential.user, { displayName: name });
+            setCurrentUser({ ...userCredential.user, displayName: name });
+            return userCredential;
+        } catch (error) {
+            console.error("Registration Error:", error.message);
+            throw new Error(error.message);
+        }
+    };
 
-        return await createUserWithEmailAndPassword(auth, email, password);
-    }
-
-    // login the user
+    // Login User
     const loginUser = async (email, password) => {
-    
-        return await signInWithEmailAndPassword(auth, email, password)
-    }
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            return userCredential;
+        } catch (error) {
+            console.error("Login Error:", error.message);
+            throw new Error(error.message);
+        }
+    };
 
-    // sing up with google
+    // Google Sign-in
     const signInWithGoogle = async () => {
-     
-        return await signInWithPopup(auth, googleProvider)
-    }
+        try {
+            const userCredential = await signInWithPopup(auth, googleProvider);
+            const user = userCredential.user;
 
-    // logout the user
-    const logout = () => {
-        return signOut(auth)
-    }
+            // Ensure displayName is set
+            if (!user.displayName) {
+                const defaultName = user.email.split("@")[0]; // Use email prefix as default name
+                await updateProfile(user, { displayName: defaultName });
+                setCurrentUser({ ...user, displayName: defaultName });
+            }
 
-    // manage user
+            return userCredential;
+        } catch (error) {
+            console.error("Google Sign-in Error:", error.message);
+            throw new Error(error.message);
+        }
+    };
+
+    // Logout User
+    const logout = async () => {
+        try {
+            await signOut(auth);
+            setCurrentUser(null);
+        } catch (error) {
+            console.error("Logout Error:", error.message);
+            throw new Error(error.message);
+        }
+    };
+
+    // Track authentication state
     useEffect(() => {
-        const unsubscribe =  onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
             setCurrentUser(user);
             setLoading(false);
-
-            if(user) {
-               
-                const {email, displayName, photoURL} = user;
-                const userData = {
-                    email, username: displayName, photo: photoURL
-                } 
-            }
-        })
+        });
 
         return () => unsubscribe();
-    }, [])
+    }, []);
 
+    const value = { currentUser, loading, registerUser, loginUser, signInWithGoogle, logout };
 
-    const value = {
-        currentUser,
-        loading,
-        registerUser,
-        loginUser,
-        signInWithGoogle,
-        logout
-    }
-    return (
-        <AuthContext.Provider value={value}>
-            {children}
-        </AuthContext.Provider>
-    )
-}
+    if (loading) return null; // Prevent rendering before auth state is resolved
+
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
