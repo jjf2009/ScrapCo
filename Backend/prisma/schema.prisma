@@ -104,15 +104,26 @@ model Item {
 
 model Transaction {
   transactionId      String     @id @default(uuid())
+
   userId             String
   dealerId           String
   itemId             Int     @unique  // Making this unique ensures one-to-one relationship with Item
   amount             Float
   paymentStatus      String     // E.g., 'Paid', 'Pending'
   trackingId         String?    // Optional tracking ID for pickup and delivery
+
   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @updatedAt
   user               User       @relation(fields: [userId], references: [userId])     // User foreign key
   dealer             Dealer     @relation(fields: [dealerId], references: [dealerId])   // Dealer foreign key
   item               Item       @relation(fields: [itemId], references: [itemId])       // Item foreign key (One-to-one relation)
+}
+
+model ShopItem {
+  ItemId             Int        @id @default(autoincrement())
+  SellerId           String     @default(uuid())
+  images             String[]
+  price              Float
+  stock              Int
+  category           String
 }
