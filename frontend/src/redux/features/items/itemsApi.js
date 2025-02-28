@@ -16,7 +16,7 @@ const itemsApi = createApi({
     tagTypes: ['Items'],
     endpoints: (builder) => ({
         fetchAllItems: builder.query({
-            query: () => "/",
+            query: () => "/items",
             providesTags: ["Items"]
         }),
         fetchItemById: builder.query({
