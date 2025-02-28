@@ -16,6 +16,7 @@ import ManageItems from "../pages/dashboard/manageItems/ManageItems.jsx";
 import AddItem from "../pages/dashboard/AddItem/AddItem.jsx";
 import UpdateItem from "../pages/dashboard/EditItem/UpdateItem.jsx";
 import UserDashboard from "../pages/dashboard/users/UserDashboard.jsx";
+import CategoriesPage from "../pages/CategoriesPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -56,7 +57,11 @@ const router = createBrowserRouter([
         },
         {
           path: "/user-dashboard",
-          element: <UserDashboard />
+          element: <UserDashboard />,
+        },
+        {
+          path: "/categories",
+          element: <CategoriesPage />,
         }
       ]
     },

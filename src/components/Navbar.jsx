@@ -13,6 +13,7 @@ const navigation = [
     { name: "Orders", href: "/orders" },
     { name: "Cart Page", href: "/cart" },
     { name: "Check Out", href: "/checkout" },
+    { name: "Categories Page", href: "/categories"}
 ];
 
 const isPage = "a dashboard"; // is page declaration (temporary)
@@ -44,7 +45,14 @@ const Navbar = () => {
                             className="bg-gray-200 w-full py-2 pl-10 pr-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
                     </div>
+                    <div className="relative sm:w-72 w-40 space-x-2">
+                    { (isPage != "Categories") &&
+                        <Link to="/categories">
+                        <div className="tab">Categories</div>
+                              </Link>}
+                    </div>
                 </div>
+                
 
                 {/* Right Section */}
                 <div className="relative flex items-center md:space-x-3 space-x-2">
@@ -94,19 +102,19 @@ const Navbar = () => {
                         <HiOutlineHeart className="size-6" />
                     </button> */}
 
-                    <Link to="/cart" className="bg-primary p-1 sm:px-6 px-2 flex items-center rounded-sm">
+                    {/* <Link to="/cart" className="bg-primary p-1 sm:px-6 px-2 flex items-center rounded-sm">
                        { (isPage != "cart") && <HiOutlineShoppingCart /> } 
                        { (isPage != "cart") &&
                         <span className="text-sm font-semibold sm:ml-1">
                             {cartItems.length > 0 ? cartItems.length : 0}
-                        </span> }
-                    </Link>
-                      {/* <Link to="/cart" className="cart">
-                       <HiOutlineShoppingCart />
-                        <span className="cart">
+                        </span> } 
+                    </Link> */}
+                      <Link to="/cart" style = {{ display: 'flex' }}>
+                       <HiOutlineShoppingCart className="cart"/>
+                        <span >
                             {cartItems.length > 0 ? cartItems.length : 0}
                         </span> 
-                    </Link> */}
+                    </Link>
                 </div>
             </nav>
         </header>
