@@ -1,23 +1,76 @@
 import prisma from "../prismaClient.js";
 
-// Create a new item
 export const createItem = async (req, res) => {
   try {
-    const { user_id, pictures, description, quantity, material, pickUpAddress, pickUpTime } = req.body;
+    const { 
+      user_id, 
+      dealer_id, 
+      telegram_id, 
+      seller_name, 
+      seller_phone, 
+      pictures, 
+      description, 
+      quantity, 
+      listPlat, 
+      material, 
+      pickUpAddress, 
+      pickUpTime, 
+      price, 
+      status 
+    } = req.body;
 
-    if (!user_id || !pictures.length || !description || !quantity || !material || !pickUpAddress || !pickUpTime) {
-      return res.status(400).json({ message: "All fields are required" });
+    // Validate required fields
+    if (!seller_name || !seller_phone || !Array.isArray(pictures) || pictures.length === 0 || 
+        !description || !quantity || !listPlat || !material || !pickUpAddress || !pickUpTime || !price) {
+      return res.status(400).json({ message: "All required fields must be provided" });
     }
 
+    // Validate quantity
+    const parsedQuantity = parseFloat(quantity);
+    if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
+      return res.status(400).json({ message: "Quantity must be a valid positive number." });
+    }
+
+    // Validate price
+    const parsedPrice = parseFloat(price);
+    if (isNaN(parsedPrice) || parsedPrice <= 0) {
+      return res.status(400).json({ message: "Price must be a valid positive number." });
+    }
+
+    // Validate enums
+    const allowedListPlatforms = ["TELEGRAM", "WEBSITE"];
+    const allowedMaterials = ["IRON", "PLASTIC", "PAPER", "GLASS"];
+    const allowedStatuses = ["PENDING", "COMPLETED", "CANCELLED"];
+
+    if (!allowedListPlatforms.includes(listPlat.toUpperCase())) {
+      return res.status(400).json({ message: `Invalid listPlat. Allowed values: ${allowedListPlatforms.join(", ")}` });
+    }
+
+    if (!allowedMaterials.includes(material.toUpperCase())) {
+      return res.status(400).json({ message: `Invalid material. Allowed values: ${allowedMaterials.join(", ")}` });
+    }
+
+    if (status && !allowedStatuses.includes(status.toUpperCase())) {
+      return res.status(400).json({ message: `Invalid status. Allowed values: ${allowedStatuses.join(", ")}` });
+    }
+
+    // Create the item
     const item = await prisma.item.create({
       data: {
         user_id,
-        pictures,
+        dealer_id,
+        telegram_id,
+        seller_name,
+        seller_phone,
+        pictures: { set: pictures }, // Ensure correct array storage
         description,
-        quantity,
-        material,
+        quantity: parsedQuantity,
+        listPlat: listPlat.toUpperCase(),
+        material: material.toUpperCase(),
         pickUpAddress,
-        pickUpTime: new Date(pickUpTime),
+        pickUpTime: pickUpTime.toString(), // Ensure it's stored as a string
+        price: parsedPrice,
+        status: status ? status.toUpperCase() : "PENDING"
       }
     });
 
@@ -27,15 +80,17 @@ export const createItem = async (req, res) => {
   }
 };
 
+
 // Get all items
 export const getAllItems = async (req, res) => {
   try {
-    const items = await prisma.item.findMany();
-    res.json(items);
+    const rawItems = await prisma.$queryRaw`SELECT * FROM "Item"`; // Fetch raw data
+    res.json(rawItems);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch items", error: error.message });
   }
 };
+
 
 // Get a single item by ID
 export const getItemById = async (req, res) => {
@@ -65,7 +120,7 @@ export const updateItem = async (req, res) => {
         quantity,
         material,
         pickUpAddress,
-        pickUpTime: new Date(pickUpTime),
+        pickUpTime,
         status,
         dealer_id
       }
