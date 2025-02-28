@@ -5,14 +5,14 @@ from dotenv import load_dotenv
 import tempfile
 import uuid
 from supabase import create_client
-
+import requests
 
 load_dotenv()
 YOUR_BOT_TOKEN = os.getenv("BOT_TOKEN")
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_API_KEY = os.getenv("SUPABASE_API_KEY")
 SUPABASE_BUCKET_NAME = os.getenv("SUPABASE_BUCKET_NAME")
-
+API_URL = "http://127.0.0.1:5000/create-item"
 # Initialize Supabase client
 if SUPABASE_URL and SUPABASE_API_KEY :
     supabase = create_client(SUPABASE_URL, SUPABASE_API_KEY)
@@ -48,9 +48,11 @@ async def image_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Download the file to a temporary location
         with tempfile.NamedTemporaryFile(delete=False, suffix=f".{file_extension}") as temp_file:
             await file.download_to_drive(temp_file.name)
+            temp_file_path = temp_file.name  # Store the file path
+            temp_file.close()  # Close the file before reading
             
             # Upload the file to Supabase
-            with open(temp_file.name, "rb") as f:
+            with open(temp_file_path, "rb") as f:
                 file_bytes = f.read()
                 
             try:
@@ -140,7 +142,11 @@ async def price_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         
         print("User Data:", user_data)
-
+        response = requests.post(API_URL, json=user_data)
+        if response.status_code == 201:
+         print("Item created successfully:", response.json())
+        else:
+          print("Error:", response.text)
 
         return ConversationHandler.END
 
