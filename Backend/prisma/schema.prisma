@@ -23,6 +23,7 @@ enum ScrapMaterial {
   PAPER
   RUBBER
   TEXTILE
+  IRON
   OTHER
 }
 
@@ -97,9 +98,29 @@ model Item {
   status        ItemStatus   @default(PENDING)
   createdAt     DateTime     @default(now())
 
+<<<<<<< HEAD
   userAcc       User?        @relation(fields:[user_id], references:[userId])  
   dealer        Dealer?      @relation(fields: [dealer_id], references: [dealerId])  
   transaction   Transaction?  
+=======
+  telegram_id         String?     //used if the seller lists from the telegram
+  seller_name         String
+  seller_phone        String
+  pictures            String[]     // Array for multiple images
+  description         String
+  quantity            Float        // Updated to Float for numeric operations
+  listPlat            listPlatform // send the data as TELEGRAM
+  material            ScrapMaterial 
+  pickUpAddress       String
+  pickUpTime          String     
+  price               Float
+
+  status              ItemStatus   @default(PENDING) // Added status
+  createdAt           DateTime     @default(now())
+  userAcc             User?         @relation(fields:[user_id], references:[userId])  // User foreign key
+  dealer              Dealer?      @relation(fields: [dealer_id], references: [dealerId]) // Optional: Only when sold to a dealer
+  transaction         Transaction? // One-to-one relationship with Transaction
+>>>>>>> 44650c6faa2547862f00b7c7d38e1204b88d78b0
 }
 
 

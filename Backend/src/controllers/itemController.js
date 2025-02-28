@@ -2,33 +2,10 @@ import prisma from "../prismaClient.js";
 
 export const createItem = async (req, res) => {
   try {
-    const { 
-      user_id, 
-      dealer_id, 
-      telegram_id, 
-      seller_name, 
-      seller_phone, 
-      pictures, 
-      description, 
-      quantity, 
-      listPlat, 
-      material, 
-      pickUpAddress, 
-      pickUpTime, 
-      price, 
-      status 
-    } = req.body;
+    const { user_id, pictures, description, quantity, material, pickUpAddress, pickUpTime, seller_name, seller_phone, listPlat, price } = req.body;
 
-    // Validate required fields
-    if (!seller_name || !seller_phone || !Array.isArray(pictures) || pictures.length === 0 || 
-        !description || !quantity || !listPlat || !material || !pickUpAddress || !pickUpTime || !price) {
-      return res.status(400).json({ message: "All required fields must be provided" });
-    }
-
-    // Validate quantity
-    const parsedQuantity = parseFloat(quantity);
-    if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
-      return res.status(400).json({ message: "Quantity must be a valid positive number." });
+    if (!pictures.length || !description || !quantity || !material || !pickUpAddress || !pickUpTime) {
+      return res.status(400).json({ message: "All fields are required" });
     }
 
     // Validate price
@@ -58,19 +35,17 @@ export const createItem = async (req, res) => {
     const item = await prisma.item.create({
       data: {
         user_id,
-        dealer_id,
-        telegram_id,
         seller_name,
         seller_phone,
-        pictures: { set: pictures }, // Ensure correct array storage
+        pictures,
         description,
         quantity: parsedQuantity,
         listPlat: listPlat.toUpperCase(),
         material: material.toUpperCase(),
         pickUpAddress,
-        pickUpTime: pickUpTime.toString(), // Ensure it's stored as a string
-        price: parsedPrice,
-        status: status ? status.toUpperCase() : "PENDING"
+        pickUpTime,
+        listPlat,
+        price
       }
     });
 
