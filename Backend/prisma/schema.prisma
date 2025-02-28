@@ -41,7 +41,7 @@ model User {
   role            Role       @default(SELLER)
   fullName        String
   phone           String     @unique
-  email           String     @unique
+  email           String?     @unique
   passwordHash    String
   permAddress     String
   profilePicture  String

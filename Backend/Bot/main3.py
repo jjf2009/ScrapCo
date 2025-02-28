@@ -1,7 +1,11 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ConversationHandler, ContextTypes
+import os
+from dotenv import load_dotenv
 
-YOUR_BOT_TOKEN='7821045045:AAEJT7wxqvE2HA7VZW24RjDZKHjlAgpwRfM'
+load_dotenv()
+
+YOUR_BOT_TOKEN=os.getenv("BOT_TOKEN")
 
 # Conversation states
 IMAGE, NAME, PHONE, ADDRESS, MATERIAL, QUANTITY, TIME, PRICE = range(8)
@@ -9,7 +13,7 @@ IMAGE, NAME, PHONE, ADDRESS, MATERIAL, QUANTITY, TIME, PRICE = range(8)
 # Dictionary to store user data temporarily
 user_data = {}
 
-async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def start_command(update: Update, _: ContextTypes.DEFAULT_TYPE):
     if update.message:
         await update.message.reply_text(
             "मैं Scrap Bot हूँ, मैं आपकी कबाड़ सामग्री को हमारी वेबसाइट www.theScrapCo.com पर सूचीबद्ध करूंगा।\n"
@@ -18,7 +22,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return IMAGE
 
-async def image_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def image_handler(update: Update, _: ContextTypes.DEFAULT_TYPE):
     if update.message and update.message.photo:
         user_data["image"] = update.message.photo[-1].file_id
         await update.message.reply_text(
@@ -31,7 +35,7 @@ async def image_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return IMAGE
 
-async def name_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def name_handler(update: Update, _: ContextTypes.DEFAULT_TYPE):
     if update.message and update.message.text:
         user_data["name"] = update.message.text
         await update.message.reply_text(
@@ -39,7 +43,7 @@ async def name_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return PHONE
 
-async def phone_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def phone_handler(update: Update, _: ContextTypes.DEFAULT_TYPE):
     if update.message and update.message.text:
         user_data["phone"] = update.message.text
         await update.message.reply_text(
@@ -47,7 +51,7 @@ async def phone_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return ADDRESS
 
-async def address_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def address_handler(update: Update, _: ContextTypes.DEFAULT_TYPE):
     if update.message and update.message.text:
         user_data["address"] = update.message.text
         await update.message.reply_text(
@@ -55,7 +59,7 @@ async def address_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return MATERIAL
 
-async def material_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def material_handler(update: Update, _: ContextTypes.DEFAULT_TYPE):
     if update.message and update.message.text:
         user_data["material"] = update.message.text
         await update.message.reply_text(
@@ -63,7 +67,7 @@ async def material_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return QUANTITY
 
-async def quantity_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def quantity_handler(update: Update, _: ContextTypes.DEFAULT_TYPE):
     if update.message and update.message.text:
         user_data["quantity"] = update.message.text
         await update.message.reply_text(
@@ -71,7 +75,7 @@ async def quantity_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return TIME
 
-async def time_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def time_handler(update: Update, _: ContextTypes.DEFAULT_TYPE):
     if update.message and update.message.text:
         user_data["pickup_time"] = update.message.text
         await update.message.reply_text(
@@ -79,7 +83,7 @@ async def time_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return PRICE
 
-async def price_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def price_handler(update: Update, _: ContextTypes.DEFAULT_TYPE):
     if update.message and update.message.text:
         user_data["price"] = update.message.text
         await update.message.reply_text(
@@ -94,7 +98,7 @@ async def price_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # TODO: Store this data in Supabase
         return ConversationHandler.END
 
-async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def cancel(update: Update, _: ContextTypes.DEFAULT_TYPE):
     if update.message:
         await update.message.reply_text(
             "❌ आपका अनुरोध रद्द कर दिया गया है!\nYour request has been cancelled!"
@@ -102,25 +106,25 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return ConversationHandler.END
 
 if __name__ == "__main__":
-    app = Application.builder().token(YOUR_BOT_TOKEN).build()
-
-    # Conversation Handler
-    conv_handler = ConversationHandler(
-        entry_points=[CommandHandler("start", start_command)],
-        states={
-            IMAGE: [MessageHandler(filters.PHOTO, image_handler)],
-            NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, name_handler)],
-            PHONE: [MessageHandler(filters.TEXT & ~filters.COMMAND, phone_handler)],
-            ADDRESS: [MessageHandler(filters.TEXT & ~filters.COMMAND, address_handler)],
-            MATERIAL: [MessageHandler(filters.TEXT & ~filters.COMMAND, material_handler)],
-            QUANTITY: [MessageHandler(filters.TEXT & ~filters.COMMAND, quantity_handler)],
-            TIME: [MessageHandler(filters.TEXT & ~filters.COMMAND, time_handler)],
-            PRICE: [MessageHandler(filters.TEXT & ~filters.COMMAND, price_handler)],
-        },
-        fallbacks=[CommandHandler("cancel", cancel)],
-    )
-
-    app.add_handler(conv_handler)
-    
-    print("Bot is running...🚀")
-    app.run_polling(poll_interval=3)
+    if YOUR_BOT_TOKEN :
+        app = Application.builder().token(YOUR_BOT_TOKEN).build()
+        # Conversation Handler
+        conv_handler = ConversationHandler(
+            entry_points=[CommandHandler("start", start_command)],
+            states={
+                IMAGE: [MessageHandler(filters.PHOTO, image_handler)],
+                NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, name_handler)],
+                PHONE: [MessageHandler(filters.TEXT & ~filters.COMMAND, phone_handler)],
+                ADDRESS: [MessageHandler(filters.TEXT & ~filters.COMMAND, address_handler)],
+                MATERIAL: [MessageHandler(filters.TEXT & ~filters.COMMAND, material_handler)],
+                QUANTITY: [MessageHandler(filters.TEXT & ~filters.COMMAND, quantity_handler)],
+                TIME: [MessageHandler(filters.TEXT & ~filters.COMMAND, time_handler)],
+                PRICE: [MessageHandler(filters.TEXT & ~filters.COMMAND, price_handler)],
+            },
+            fallbacks=[CommandHandler("cancel", cancel)],
+        )
+        app.add_handler(conv_handler) 
+        print("Bot is running...🚀")
+        app.run_polling(poll_interval=3)
+    else :
+        print("Bot token not found") 
