@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 // import TopSellers from '../components/TopSellers';
 // import Recommended from '../components/Recommended';
 // import News from '../components/News';
-// import ClawEmbed from './ClawEmbed';
+
 
 const Home = () => {
   useEffect(() => {
