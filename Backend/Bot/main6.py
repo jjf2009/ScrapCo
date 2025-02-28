@@ -5,14 +5,14 @@ from dotenv import load_dotenv
 import tempfile
 import uuid
 from supabase import create_client
-import requests
+
 
 load_dotenv()
 YOUR_BOT_TOKEN = os.getenv("BOT_TOKEN")
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_API_KEY = os.getenv("SUPABASE_API_KEY")
 SUPABASE_BUCKET_NAME = os.getenv("SUPABASE_BUCKET_NAME")
-API_URL = "http://127.0.0.1:5000/create-item"
+
 # Initialize Supabase client
 if SUPABASE_URL and SUPABASE_API_KEY :
     supabase = create_client(SUPABASE_URL, SUPABASE_API_KEY)
@@ -21,6 +21,28 @@ if SUPABASE_URL and SUPABASE_API_KEY :
 IMAGE, NAME, PHONE, ADDRESS, MATERIAL, DESCRIPTION, QUANTITY, TIME, PRICE = range(9)
 # Dictionary to store user data temporarily
 user_data = {}
+
+async def add_item(user_data):
+    try:
+        response = supabase.table("Item").insert({
+            "seller_name": user_data["name"],
+            "seller_phone": user_data["phone"],
+            "pictures": [user_data["image"]["supabase_url"]],
+            "description": user_data["description"],
+            "quantity": float(user_data["quantity"]),
+            "pickUpAddress": user_data["address"],
+            "pickUpTime": user_data["pickup_time"],
+            "price": float(user_data["price"]),
+            "listPlat": "TELEGRAM",
+            "telegram_id": str(user_data["telegram_id"]),
+            "material": "OTHER",  # You can dynamically map materials here
+        }).execute()
+        print("Data Inserted Successfully ✅", response)
+        return response
+
+    except Exception as e:
+        print("Failed to insert data ❌", e)
+        return None
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print("hey")
@@ -48,11 +70,9 @@ async def image_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Download the file to a temporary location
         with tempfile.NamedTemporaryFile(delete=False, suffix=f".{file_extension}") as temp_file:
             await file.download_to_drive(temp_file.name)
-            temp_file_path = temp_file.name  # Store the file path
-            temp_file.close()  # Close the file before reading
             
             # Upload the file to Supabase
-            with open(temp_file_path, "rb") as f:
+            with open(temp_file.name, "rb") as f:
                 file_bytes = f.read()
                 
             try:
@@ -143,11 +163,13 @@ async def price_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if update.message.from_user :
             user_data["telegram_id"] = update.message.from_user.id 
         print("User Data:", user_data)
-        response = requests.post(API_URL, json=user_data)
-        if response.status_code == 201:
-         print("Item created successfully:", response.json())
+
+        response = await add_item(user_data)
+        if response:
+            await update.message.reply_text("✅ आपके कबाड़ की सूची सफलतापूर्वक बनाई गई है!")
         else:
-          print("Error:", response.text)
+            await update.message.reply_text("❌ सर्वर त्रुटि! कृपया फिर से प्रयास करें।")
+
 
         return ConversationHandler.END
 
