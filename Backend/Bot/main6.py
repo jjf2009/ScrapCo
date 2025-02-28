@@ -22,6 +22,28 @@ IMAGE, NAME, PHONE, ADDRESS, MATERIAL, DESCRIPTION, QUANTITY, TIME, PRICE = rang
 # Dictionary to store user data temporarily
 user_data = {}
 
+async def add_item(user_data):
+    try:
+        response = supabase.table("Item").insert({
+            "seller_name": user_data["name"],
+            "seller_phone": user_data["phone"],
+            "pictures": [user_data["image"]["supabase_url"]],
+            "description": user_data["description"],
+            "quantity": float(user_data["quantity"]),
+            "pickUpAddress": user_data["address"],
+            "pickUpTime": user_data["pickup_time"],
+            "price": float(user_data["price"]),
+            "listPlat": "TELEGRAM",
+            "telegram_id": str(user_data["telegram_id"]),
+            "material": "OTHER",  # You can dynamically map materials here
+        }).execute()
+        print("Data Inserted Successfully ✅", response)
+        return response
+
+    except Exception as e:
+        print("Failed to insert data ❌", e)
+        return None
+
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print("hey")
     if update.message:
@@ -141,6 +163,12 @@ async def price_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if update.message.from_user :
             user_data["telegram_id"] = update.message.from_user.id 
         print("User Data:", user_data)
+
+        response = await add_item(user_data)
+        if response:
+            await update.message.reply_text("✅ आपके कबाड़ की सूची सफलतापूर्वक बनाई गई है!")
+        else:
+            await update.message.reply_text("❌ सर्वर त्रुटि! कृपया फिर से प्रयास करें।")
 
 
         return ConversationHandler.END
