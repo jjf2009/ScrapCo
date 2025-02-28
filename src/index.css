@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.btn-primary {
+    border-radius: 1.5rem;
+    height: 30px;
+    width: 100px;
+    font-size: medium;
+    background-color: lightgreen;
+    
+}
+.btn-primary:hover {
+    /* height: 40px;
+    width: 150px;
+    font-size: large; */
+    background-color: #467f46;
+}
