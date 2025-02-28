@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
-import { HiMiniBars3CenterLeft, HiOutlineHeart, HiOutlineShoppingCart } from "react-icons/hi2";
+import { HiMiniBars3CenterLeft, HiOutlineHeart, HiOutlineShoppingCart,  HiHome } from "react-icons/hi2";
 import { IoSearchOutline } from "react-icons/io5";
 import { HiOutlineUser } from "react-icons/hi";
 // import avatarImg from "../assets/avatar.png";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useAuth } from "../context/AuthContext";
+import './Navbar.css' ;
 
 const navigation = [
     { name: "Dashboard", href: "/user-dashboard" },
@@ -13,6 +14,8 @@ const navigation = [
     { name: "Cart Page", href: "/cart" },
     { name: "Check Out", href: "/checkout" },
 ];
+
+const isPage = "a dashboard"; // is page declaration (temporary)
 
 const Navbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -29,9 +32,10 @@ const Navbar = () => {
             <nav className="flex justify-between items-center">
                 {/* Left Section */}
                 <div className="flex items-center md:gap-16 gap-4">
-                    <Link to="/">
-                        <HiMiniBars3CenterLeft className="size-6" />
-                    </Link>
+                    { (isPage != "dashboard") &&
+                        <Link to="/">
+                        <HiHome className="button" />
+                              </Link>}
                     <div className="relative sm:w-72 w-40 space-x-2">
                         <IoSearchOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
                         <input
@@ -82,20 +86,27 @@ const Navbar = () => {
                         <Link to="/dashboard" className="border-b-2 border-primary text-primary">Dashboard</Link>
                     ) : (
                         <Link to="/login">
-                            <HiOutlineUser className="size-6" />
+                           { (isPage != "login") && <HiOutlineUser className="button" /> }
                         </Link>
                     )}
 
-                    <button className="hidden sm:block">
+                    {/* <button className="hidden sm:block">
                         <HiOutlineHeart className="size-6" />
-                    </button>
+                    </button> */}
 
                     <Link to="/cart" className="bg-primary p-1 sm:px-6 px-2 flex items-center rounded-sm">
-                        <HiOutlineShoppingCart />
+                       { (isPage != "cart") && <HiOutlineShoppingCart /> } 
+                       { (isPage != "cart") &&
                         <span className="text-sm font-semibold sm:ml-1">
                             {cartItems.length > 0 ? cartItems.length : 0}
-                        </span>
+                        </span> }
                     </Link>
+                      {/* <Link to="/cart" className="cart">
+                       <HiOutlineShoppingCart />
+                        <span className="cart">
+                            {cartItems.length > 0 ? cartItems.length : 0}
+                        </span> 
+                    </Link> */}
                 </div>
             </nav>
         </header>
