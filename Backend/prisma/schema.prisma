@@ -22,6 +22,7 @@ enum ScrapMaterial {
   PAPER
   RUBBER
   TEXTILE
+  IRON
   OTHER
 }
 
@@ -92,7 +93,7 @@ model Item {
   listPlat            listPlatform // send the data as TELEGRAM
   material            ScrapMaterial 
   pickUpAddress       String
-  pickUpTime          String     // Changed to DateTime for better management
+  pickUpTime          String     
   price               Float
 
   status              ItemStatus   @default(PENDING) // Added status

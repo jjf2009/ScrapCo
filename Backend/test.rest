@@ -14,3 +14,34 @@ POST /auth/signup/seller
   "sellerRole": "INDIVIDUAL"
 }
 
+http://localhost:8080
+
+Accept: application/json;
+Content-Type: application/json; charset=utf-8
+
+GET /items
+
+##########################################################
+
+http://localhost:8080
+
+POST /create
+{
+  "seller_name": "John Doe",
+  "seller_phone": "+919876543210",
+  "telegram_id": "987654321",
+  "pictures": [
+    "https://example.com/image1.jpg",
+    "https://example.com/image2.jpg"
+  ],
+  "description": "Old iron rods for sale",
+  "quantity": 10.5,
+  "listPlat": "TELEGRAM",
+  "material": "IRON",
+  "pickUpAddress": "123 Street, Goa",
+  "pickUpTime": "3.30am",  
+  "price": 500.00,
+  "status": "PENDING"
+}
+
+
