@@ -7,4 +7,4 @@ A full-stack web application for scrap material trading. Monorepo — merged fro
 
 Full commit history of both original repos is preserved in this repo.
 
-**Security note:** the original frontend repo had a `.env` file committed to git history. It has been removed from the working tree and gitignored as part of this merge, but the file — and whatever it contained — still exists in git history until that history is scrubbed (e.g. with `git filter-repo`) and any real credentials it held are rotated.
+**Security note:** the original frontend repo had a `.env` file committed to git history. It has since been scrubbed from history with `git filter-repo` and force-pushed. Any real credentials it held should still be rotated if that hasn't been done already.
